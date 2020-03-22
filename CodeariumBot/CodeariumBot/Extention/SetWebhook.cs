@@ -9,8 +9,8 @@ namespace CodeariumBot.Extention
         public static IServiceCollection AddTelegramBotClient(this IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
-            TelegramBotClient client = new TelegramBotClient(configuration["Token"]);
-            string webHook = $"{configuration["Url"]}/api/message/update";
+            TelegramBotClient client = new TelegramBotClient(configuration["TelegrabBotSettings:Token"]);
+            string webHook = $"{configuration["TelegrabBotSettings:Url"]}/api/message/update";
             client.SetWebhookAsync(webHook).Wait();
 
             return serviceCollection

@@ -1,5 +1,5 @@
 using CodeariumBot.Extention;
-using CodeariumBot.Settings;
+using CodeariumServices.Settings;
 using CodeariumServices.Implementations;
 using CodeariumServices.Interfaces;
 using Microsoft.AspNetCore.Builder;

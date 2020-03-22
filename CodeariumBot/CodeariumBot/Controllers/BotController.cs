@@ -1,8 +1,10 @@
-﻿using CodeariumServices.Interfaces;
+﻿using CodeariumBot.BotCommands;
+using CodeariumServices.Settings;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace CodeariumBot.Controllers
 {
@@ -10,12 +12,13 @@ namespace CodeariumBot.Controllers
     [Route("api/message/update")]
     public class BotController : Controller
     {
-        private readonly ITelegramBotClient _telegramBotClient;
-        private readonly IInitialBotService InitialBotService;
-        public BotController(IInitialBotService initialBotService, ITelegramBotClient telegramBotClient)
+        private readonly TelegramBotConfiguration TelegramBotConfiguration;
+        private readonly TelegramBotClient TelegramBotClient;
+
+        public BotController(TelegramBotConfiguration telegramBotConfiguration)
         {
-            InitialBotService = initialBotService;
-            _telegramBotClient = telegramBotClient;
+            TelegramBotConfiguration = telegramBotConfiguration;
+            TelegramBotClient = new TelegramBotClient(TelegramBotConfiguration.Token);
         }
 
         [HttpGet]
@@ -32,8 +35,7 @@ namespace CodeariumBot.Controllers
                 return Ok();
             }
 
-
-            await InitialBotService.EchoAsync(update);
+            await new CommandDefinition(TelegramBotClient, update).DefineCommand();
 
             return Ok();
         }

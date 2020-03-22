@@ -1,37 +1,42 @@
 ﻿using CodeariumServices.Interfaces;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.InlineQueryResults;
-using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
+using CodeariumServices.Settings;
 
 namespace CodeariumServices.Implementations
 {
-	public class InitialBotService : IInitialBotService
-	{
-        private static readonly TelegramBotClient telegramBotClient = new TelegramBotClient("1133650379:AAFp_TD2eZemWCFTIlPf0niCcW1nR7G36VQ");
+    public class InitialBotService : IInitialBotService
+    {
+        private readonly TelegramBotConfiguration TelegramBotConfiguration;
+        private readonly TelegramBotClient TelegramBotClient;
+
+        public InitialBotService(TelegramBotConfiguration telegramBotConfiguration)
+        {
+            TelegramBotConfiguration = telegramBotConfiguration;
+            TelegramBotClient = new TelegramBotClient(TelegramBotConfiguration.Token);
+        }
         public async Task EchoAsync(Update update)
         {
 
             if (update.Type != UpdateType.Message)
+            {
                 return;
+            }
 
-            var message = update.Message;
-
+            Message message = update.Message;
 
             switch (message.Text.Split(' ').First())
             {
                 case "/menu":
-                    await telegramBotClient.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                    await TelegramBotClient.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
 
                     await Task.Delay(500);
 
-                    var inlineKeyboard = new InlineKeyboardMarkup(new[]
+                    InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(new[]
                     {
                         new []
                         {
@@ -44,7 +49,7 @@ namespace CodeariumServices.Implementations
                             InlineKeyboardButton.WithCallbackData("soon", "soon"),
                         }
                     });
-                    await telegramBotClient.SendTextMessageAsync(
+                    await TelegramBotClient.SendTextMessageAsync(
                         chatId: message.Chat.Id,
                         text: "Choose",
                         replyMarkup: inlineKeyboard
@@ -57,7 +62,7 @@ namespace CodeariumServices.Implementations
                         new[] { "1.1", "1.2" },
                         new[] { "2.1", "2.2" },
                     };
-                    await telegramBotClient.SendTextMessageAsync(
+                    await TelegramBotClient.SendTextMessageAsync(
                         chatId: message.Chat.Id,
                         text: "Choose",
                         replyMarkup: ReplyKeyboard
@@ -66,12 +71,12 @@ namespace CodeariumServices.Implementations
 
 
                 case "/request":
-                    var RequestReplyKeyboard = new ReplyKeyboardMarkup(new[]
+                    ReplyKeyboardMarkup RequestReplyKeyboard = new ReplyKeyboardMarkup(new[]
                     {
                         KeyboardButton.WithRequestLocation("Location"),
                         KeyboardButton.WithRequestContact("Contact"),
                     });
-                    await telegramBotClient.SendTextMessageAsync(
+                    await TelegramBotClient.SendTextMessageAsync(
                         chatId: message.Chat.Id,
                         text: "Who or Where are you?",
                         replyMarkup: RequestReplyKeyboard
@@ -80,11 +85,11 @@ namespace CodeariumServices.Implementations
 
 
                 case "/Sasha":
-                    await telegramBotClient.SendTextMessageAsync(message.Chat.Id, $"I love you bab");
+                    await TelegramBotClient.SendTextMessageAsync(message.Chat.Id, $"I love you bab");
                     break;
 
                 case "/Nikita":
-                    await telegramBotClient.SendTextMessageAsync(message.Chat.Id, $"You are fag!!! HA-ha");
+                    await TelegramBotClient.SendTextMessageAsync(message.Chat.Id, $"You are fag!!! HA-ha");
                     break;
 
                 default:
@@ -94,7 +99,7 @@ namespace CodeariumServices.Implementations
                         "/Nikita - That's for you Nikita";
                     const string usageForSandra = "Usage:\n" +
                         "/Sasha - if you have bad mood enter this command";
-                    await telegramBotClient.SendTextMessageAsync(
+                    await TelegramBotClient.SendTextMessageAsync(
                         chatId: message.Chat.Id,
                         text: message.Chat.Username == "Sandra_Nikitina" ? usageForSandra : usage,
                         replyMarkup: new ReplyKeyboardRemove()
