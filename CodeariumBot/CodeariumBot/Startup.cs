@@ -15,6 +15,8 @@ namespace CodeariumBot
 	{
 		private readonly IConfiguration Configuration;
 		private TelegramBotConfiguration TelegrabBotSettings => Configuration.GetSection("TelegrabBotSettings").Get<TelegramBotConfiguration>();
+		private AzureStorageSettings AzureStorageSettigns => Configuration.GetSection("AzureStorageSettings").Get<AzureStorageSettings>();
+
 
 		public Startup(IWebHostEnvironment env)
 		{
@@ -31,6 +33,7 @@ namespace CodeariumBot
 			services.AddTransient<IInitialBotService, InitialBotService>();
 
 			services.AddSingleton(TelegrabBotSettings);
+			services.AddSingleton(AzureStorageSettigns);
 
 			services
 				.AddTelegramBotClient(Configuration)
