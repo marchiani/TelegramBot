@@ -33,7 +33,7 @@ namespace CodeariumBot
 			services.AddSingleton(TelegrabBotSettings);
 
 			services
-				.AddTelegramBotClient(Configuration)
+				.AddTelegramBotClient(TelegrabBotSettings)
 				.AddControllers()
 				.AddNewtonsoftJson(options =>
 				{
