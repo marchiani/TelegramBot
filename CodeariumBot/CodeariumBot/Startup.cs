@@ -36,7 +36,7 @@ namespace CodeariumBot
 			services.AddSingleton(AzureStorageSettigns);
 
 			services
-				.AddTelegramBotClient(Configuration)
+				.AddTelegramBotClient(TelegrabBotSettings)
 				.AddControllers()
 				.AddNewtonsoftJson(options =>
 				{
