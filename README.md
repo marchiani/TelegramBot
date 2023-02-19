@@ -1,2 +1,2 @@
 # Codearium Telegram bot
-## Documentation coming soon
+## Telegram bot that transforms your thoughts into a code!
